@@ -1,8 +1,7 @@
 import React from "react";
+import { useForm, Controller } from "react-hook-form";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Divider from "@mui/material/Divider";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
@@ -12,8 +11,9 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
-import ForgotPassword from "./ForgotPassword";
-import AppTheme from "./theme/AppTheme";
+import theme from "../../config/theme";
+import { useLogin } from "./service/mutation/useLogin";
+
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
@@ -22,7 +22,7 @@ const Card = styled(MuiCard)(({ theme }) => ({
   padding: theme.spacing(4),
   gap: theme.spacing(2),
   margin: "auto",
-  backgroundColor: "#252525",
+  backgroundColor: "#1E1E1E",
   color: "#EAB308",
   [theme.breakpoints.up("sm")]: {
     maxWidth: "450px",
@@ -35,6 +35,9 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
   height: "100vh",
   minHeight: "100%",
   padding: theme.spacing(2),
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
   backgroundImage:
     "linear-gradient(to bottom, #252525, #3A3A3A 25%, #EAB308 15%, #3A3A3A 25%, #252525)",
   [theme.breakpoints.up("sm")]: {
@@ -42,139 +45,155 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
   },
 }));
 
+const CustomTextField = styled(TextField)({
+  backgroundColor: "#FFFFFF",
+  borderRadius: "8px",
+  fontSize: "1rem",
+  fontWeight: "400",
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderColor: "#E0E0E0",
+    },
+    "&:hover fieldset": {
+      borderColor: "#FFC107",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#EAB308",
+    },
+  },
+  "& .MuiFormHelperText-root": {
+    color: "#FF5252",
+  },
+});
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  backgroundColor: "#EAB308",
+  color: "#1E1E1E",
+  padding: theme.spacing(1.5),
+  borderRadius: "8px",
+  textTransform: "none",
+  fontWeight: "bold",
+  fontSize: "1rem",
+  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+  "&:hover": {
+    backgroundColor: "#FFC107",
+  },
+}));
+
 export default function Login() {
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
-  const [open, setOpen] = React.useState(false);
+  const { mutate } = useLogin();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm();
 
-  const handleClickOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const validateInputs = () => {
-    const email = document.getElementById("email");
-    const password = document.getElementById("password");
-
-    let isValid = true;
-
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage("Please enter a valid email address.");
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage("");
-    }
-
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage("Password must be at least 6 characters long.");
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage("");
-    }
-
-    return isValid;
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    if (!validateInputs()) {
-      return;
-    }
-
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+  const onSubmit = (data) => {
+    console.log(data, "data");
+    console.log(mutate(data));
   };
 
   return (
     <Box>
-      <CssBaseline enableColorScheme />
       <SignInContainer direction="column" justifyContent="space-between">
         <Card variant="outlined">
-          <SitemarkIcon />
+          <Box textAlign={"center"}>
+            <img
+              width={"60px"}
+              height={"60px"}
+              src="./favicon.png"
+              alt="App Logo"
+              style={{ borderRadius: "50%" }}
+            />
+          </Box>
           <Typography
             component="h1"
             variant="h4"
-            sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
+            sx={{
+              width: "100%",
+              fontSize: "clamp(2rem, 10vw, 2.15rem)",
+              fontWeight: "bold",
+              color: "#EAB308",
+              textAlign: "center",
+              marginBottom: "1rem",
+            }}
           >
             Sign in
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              width: "100%",
-              gap: 2,
-            }}
-          >
-            <FormControl>
-              <FormLabel htmlFor="email">Email</FormLabel>
-              <TextField
-                error={emailError}
-                helperText={emailErrorMessage}
-                id="email"
-                type="email"
-                name="email"
-                placeholder="your@email.com"
-                autoComplete="email"
-                autoFocus
-                required
-                fullWidth
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel htmlFor="password">Password</FormLabel>
-              <TextField
-                error={passwordError}
-                helperText={passwordErrorMessage}
-                name="password"
-                placeholder="••••••"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                required
-                fullWidth
-              />
-            </FormControl>
-            <FormControlLabel
-              control={<Checkbox value="remember" />}
-              label="Remember me"
-            />
-            <ForgotPassword open={open} handleClose={handleClose} />
-            <Button type="submit" fullWidth variant="contained">
-              Sign in
-            </Button>
-            <Link
-              component="button"
-              type="button"
-              onClick={handleClickOpen}
-              variant="body2"
-              sx={{ alignSelf: "center" }}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+                gap: 3,
+              }}
             >
-              Forgot your password?
-            </Link>
-          </Box>
-          <Divider>or</Divider>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <Button fullWidth variant="outlined" startIcon={<GoogleIcon />}>
-              Sign in with Google
-            </Button>
-            <Button fullWidth variant="outlined" startIcon={<FacebookIcon />}>
-              Sign in with Facebook
-            </Button>
-            <Typography sx={{ textAlign: "center" }}>
+              <FormControl>
+                <FormLabel htmlFor="login">Login</FormLabel>
+                <Controller
+                  name="login"
+                  control={control}
+                  rules={{
+                    required: "Login is required",
+                  }}
+                  render={({ field }) => (
+                    <CustomTextField
+                      {...field}
+                      error={!!errors.login}
+                      helperText={errors.login ? errors.login.message : ""}
+                      id="login"
+                      autoComplete="username"
+                      required
+                      fullWidth
+                    />
+                  )}
+                />
+              </FormControl>
+
+              <FormControl>
+                <FormLabel htmlFor="password">Password</FormLabel>
+                <Controller
+                  name="password"
+                  control={control}
+                  rules={{
+                    required: "Password is required",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters long",
+                    },
+                  }}
+                  render={({ field }) => (
+                    <CustomTextField
+                      {...field}
+                      error={!!errors.password}
+                      helperText={
+                        errors.password ? errors.password.message : ""
+                      }
+                      type="password"
+                      id="password"
+                      autoComplete="current-password"
+                      required
+                      fullWidth
+                    />
+                  )}
+                />
+              </FormControl>
+
+              <StyledButton type="submit" fullWidth>
+                Sign in
+              </StyledButton>
+            </Box>
+          </form>
+
+          <Divider sx={{ color: "#EAB308", my: 3 }} />
+          <Box textAlign="center">
+            <Typography sx={{ color: "#F5F5F5" }}>
               Don&apos;t have an account?{" "}
-              <Link href="/sign-up" variant="body2">
+              <Link
+                sx={{ color: "#EAB308", textDecoration: "none" }}
+                href="/registration"
+              >
                 Sign up
               </Link>
             </Typography>
