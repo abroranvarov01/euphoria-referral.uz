@@ -1,10 +1,4 @@
-import { Box, Stack, Typography } from '@mui/material'
-import React from 'react'
-import theme from '../../config/theme'
-import DownloadingIcon from '@mui/icons-material/Downloading';
-import RemoveRedEyeRoundedIcon from '@mui/icons-material/RemoveRedEyeRounded';
-import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import Statistics from "../../components/SideBar/Statistics/Statistics";
+
 function main() {
   return (
         <Stack direction={'row'} padding={'12px'}>
@@ -42,6 +36,6 @@ function main() {
            <Statistics paid={10} rejected={5} in_progress={3} done={8} trash={2} />
           </Box>
         </Stack>
-  )
+
 
 export default main;
