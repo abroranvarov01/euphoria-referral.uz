@@ -1,14 +1,23 @@
 import { createTheme } from "@mui/material";
 const theme = createTheme({
+  components: {
+    MuiFormLabel: {
+      styleOverrides: {
+        root: {
+          color: "#fff",
+        },
+      },
+    },
+  },
   palette: {
     primary: {
-      main: "#3f51b5",
+      main: "#222222",
     },
     secondary: {
-      main: "#f50057",
+      main: "#EAB308",
     },
     background: {
-      default: "#f5f5f5",
+      default: "#252525",
     },
   },
   typography: {
