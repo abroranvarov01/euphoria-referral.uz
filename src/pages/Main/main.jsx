@@ -1,7 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
 import React from "react";
 import theme from "../../config/theme";
-import Statistics from "../../components/SideBar/Statistics/Statistics";
+import Slider from "../../components/Slider/Slider";
 
 function main() {
   return (
@@ -78,8 +78,8 @@ function main() {
           </Typography>
         </Stack>
       </Stack>
-      <Box maxWidth={"400px"}>
-        <Statistics paid={10} rejected={5} in_progress={3} done={8} trash={2} />
+      <Box>
+        <Slider />
       </Box>
     </Box>
   );
