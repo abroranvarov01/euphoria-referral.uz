@@ -14,6 +14,7 @@ const Router = () => {
         <Route path="/registration" element={<Registration />} />
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Main />} />
+          
         </Route>
       </Routes>
     </div>
