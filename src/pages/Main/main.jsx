@@ -78,9 +78,6 @@ function main() {
           </Typography>
         </Stack>
       </Stack>
-      <Box>
-        <Slider />
-      </Box>
     </Box>
   );
 }
